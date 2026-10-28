@@ -7,9 +7,6 @@ phases:
   install:
     runtime-versions:
       nodejs: 22
-    commands:
-      - nvm install 22.22.3
-      - nvm use 22.22.3
   pre_build:
     commands:
       - npm ci
