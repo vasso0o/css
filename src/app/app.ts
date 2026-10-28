@@ -69,7 +69,7 @@ import { MenuItem } from './models';
     </footer>
   `,
   styles: `
-    header { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--c-bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--c-line); }
+    header { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--c-bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--c-line); }
     .bar { max-width: 1120px; margin: 0 auto; padding: calc(var(--site-pad) * .6) var(--site-pad); display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; color: var(--c-fg); }
     .logo { height: 40px; width: auto; max-width: 160px; object-fit: contain; border-radius: calc(var(--site-radius) / 2); }
