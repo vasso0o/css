@@ -1,0 +1,60 @@
+name: Build user site
+
+# Triggered by the CMS backend whenever a user saves/publishes/deletes a page:
+#   POST https://api.github.com/repos/<owner>/<repo>/dispatches
+#   { "event_type": "cms-content-changed", "client_payload": { "userId": "<user-id>" } }
+# Can also be run manually, or with a comma-separated USER_IDS repo variable to rebuild all users.
+on:
+  repository_dispatch:
+    types: [cms-content-changed]
+  workflow_dispatch:
+    inputs:
+      userId:
+        description: User id to build (empty = all users in vars.USER_IDS)
+        required: false
+
+concurrency:
+  group: site-${{ github.event.client_payload.userId || inputs.userId || 'all' }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      users: ${{ steps.users.outputs.users }}
+    steps:
+      - id: users
+        env:
+          ONE: ${{ github.event.client_payload.userId || inputs.userId }}
+          ALL: ${{ vars.USER_IDS }}
+        run: |
+          list="${ONE:-$ALL}"
+          json=$(echo "$list" | tr ',' '\n' | sed 's/^ *//;s/ *$//' | grep -v '^$' | jq -R . | jq -sc .)
+          echo "users=$json" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: plan
+    if: needs.plan.outputs.users != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        user: ${{ fromJson(needs.plan.outputs.users) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Fetch pages and build
+        env:
+          USER_ID: ${{ matrix.user }}
+          CMS_API_URL: ${{ secrets.CMS_API_URL }}
+        run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-${{ matrix.user }}
+          path: dist/css/browser
+      # Deploy step: publish dist/css/browser for this site to your static host
+      # (e.g. s3 sync to a per-site prefix, Azure Static Web Apps, Netlify, Cloudflare Pages).

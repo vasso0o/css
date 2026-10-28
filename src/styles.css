@@ -1,0 +1,78 @@
+:root {
+  --max: 960px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Theme palettes come from the CMS as --l-* (light) and --d-* (dark) variables set on app-root. */
+app-root {
+  --c-accent: var(--l-primary);
+  --c-accent-fg: var(--l-primary-fg);
+  --c-secondary: var(--l-secondary);
+  --c-bg: var(--l-bg);
+  --c-surface: var(--l-surface);
+  --c-fg: var(--l-text);
+  --c-muted: color-mix(in srgb, var(--c-fg) 68%, var(--c-bg));
+  --c-line: color-mix(in srgb, var(--c-fg) 12%, var(--c-bg));
+  color-scheme: light;
+  display: block;
+  min-height: 100vh;
+  background: var(--c-bg);
+  color: var(--c-fg);
+}
+
+app-root[data-mode='dark'] {
+  --c-accent: var(--d-primary);
+  --c-accent-fg: var(--d-primary-fg);
+  --c-secondary: var(--d-secondary);
+  --c-bg: var(--d-bg);
+  --c-surface: var(--d-surface);
+  --c-fg: var(--d-text);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  app-root[data-mode='auto'] {
+    --c-accent: var(--d-primary);
+    --c-accent-fg: var(--d-primary-fg);
+    --c-secondary: var(--d-secondary);
+    --c-bg: var(--d-bg);
+    --c-surface: var(--d-surface);
+    --c-fg: var(--d-text);
+    color-scheme: dark;
+  }
+}
+
+a {
+  color: var(--c-accent);
+}
+
+/* Per-block opacity from the CMS (data.opacity) */
+[data-block] {
+  opacity: var(--block-opacity, 1);
+}
+
+/* Scroll reveal (see blocks/reveal.ts) */
+.rv {
+  opacity: 0;
+  transform: translateY(32px) scale(0.98);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.rv.rv-in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rv { opacity: 1; transform: none; transition: none; }
+}
