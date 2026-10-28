@@ -12,7 +12,7 @@ const DEFAULT_THEME: Theme = {
 
 const EMPTY_BRANDING: Branding = {
   siteName: '', tagline: '', logoUrl: '', faviconUrl: '', contactEmail: '',
-  metaTitle: '', metaDescription: '', metaKeywords: '', ogImageUrl: '',
+  metaTitle: '', metaDescription: '', metaKeywords: '', ogImageUrl: '', domain: '',
 };
 
 function luminance(hex: string): number {

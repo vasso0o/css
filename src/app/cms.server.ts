@@ -24,6 +24,7 @@ async function fetchContent(): Promise<CmsContent> {
   if (!userId) throw new Error('USER_ID is not set (add it to .env.local or the environment).');
 
   const base = (process.env['CMS_API_URL'] || 'http://localhost:4001').replace(/\/+$/, '');
+  const siteDomain = process.env['SITE_DOMAIN']?.trim().toLowerCase();
   const root = `${base}/api/public/users/${encodeURIComponent(userId)}`;
 
   let res: Response;
@@ -36,6 +37,12 @@ async function fetchContent(): Promise<CmsContent> {
 
   const bundle = await res.json();
   if (!Array.isArray(bundle.pages)) throw new Error('The CMS response has no pages array.');
+  if (
+    siteDomain &&
+    bundle.branding?.domain?.trim().toLowerCase() !== siteDomain
+  ) {
+    throw new Error('The published site domain does not match SITE_DOMAIN.');
+  }
 
   // Uploaded media is referenced relative to the CMS; make it absolute.
   const MEDIA =

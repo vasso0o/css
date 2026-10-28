@@ -1,0 +1,43 @@
+version: 0.2
+
+env:
+  shell: bash
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+    commands:
+      - nvm install 22.22.3
+      - nvm use 22.22.3
+  pre_build:
+    commands:
+      - npm ci
+      - |
+        set -euo pipefail
+        : "${USER_ID:?USER_ID is required}"
+        : "${SITE_DOMAIN:?SITE_DOMAIN is required}"
+        : "${CMS_API_URL:?CMS_API_URL is required}"
+        : "${SITE_BUCKET:?SITE_BUCKET is required}"
+        : "${CLOUDFRONT_DISTRIBUTION_ID:?CLOUDFRONT_DISTRIBUTION_ID is required}"
+        if [[ ! "$SITE_DOMAIN" =~ ^[a-z0-9][a-z0-9-]{0,61}\.bakabuild\.com$ ]]; then
+          echo "SITE_DOMAIN must be one subdomain under bakabuild.com."
+          exit 1
+        fi
+  build:
+    commands:
+      - |
+        set -euo pipefail
+        if [[ "${SITE_ACTION:-publish}" == "unpublish" ]]; then
+          aws s3 rm "s3://${SITE_BUCKET}/sites/${SITE_DOMAIN}/" --recursive
+        else
+          export USER_ID SITE_DOMAIN CMS_API_URL
+          npm run build
+          test -f dist/css/browser/index.html
+          aws s3 sync dist/css/browser/ "s3://${SITE_BUCKET}/sites/${SITE_DOMAIN}/" \
+            --delete \
+            --cache-control "public,max-age=60,s-maxage=60"
+        fi
+        aws cloudfront create-invalidation \
+          --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
+          --paths "/sites/${SITE_DOMAIN}/*"

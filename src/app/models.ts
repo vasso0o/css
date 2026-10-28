@@ -38,6 +38,7 @@ export interface Branding {
   metaDescription: string;
   metaKeywords: string;
   ogImageUrl: string;
+  domain: string;
 }
 
 export interface MenuItem {
