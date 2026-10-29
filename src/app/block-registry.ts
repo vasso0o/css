@@ -11,6 +11,10 @@ import { FullHeroBlock } from './blocks/full-hero';
 import { ImageTextBlock } from './blocks/image-text';
 import { BentoBlock } from './blocks/bento';
 import { FabBlock } from './blocks/fab';
+import { SpacerBlock } from './blocks/spacer';
+import { DividerBlock } from './blocks/divider';
+import { ButtonGroupBlock } from './blocks/button-group';
+import { ListBlock } from './blocks/list';
 
 // Add a styled component here to support a new block type from the CMS schema.
 export const BLOCK_REGISTRY: Record<BlockType, Type<unknown>> = {
@@ -25,4 +29,8 @@ export const BLOCK_REGISTRY: Record<BlockType, Type<unknown>> = {
   imageText: ImageTextBlock,
   bento: BentoBlock,
   fab: FabBlock,
+  spacer: SpacerBlock,
+  divider: DividerBlock,
+  buttonGroup: ButtonGroupBlock,
+  list: ListBlock,
 };

@@ -9,13 +9,18 @@ export type BlockType =
   | 'fullHero'
   | 'imageText'
   | 'bento'
-  | 'fab';
+  | 'fab'
+  | 'spacer'
+  | 'divider'
+  | 'buttonGroup'
+  | 'list';
 
 export interface Block {
   id: string;
   type: BlockType | (string & {});
   data: Record<string, string>;
   items?: unknown;
+  order?: number;
 }
 
 export interface Page {
