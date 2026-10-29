@@ -11,7 +11,7 @@ import { Reveal } from './reveal';
       @if (text('title')) {
         <h2>{{ text('title') }}</h2>
       }
-      @for (q of entries(); track $index) {
+      @for (q of entries(); track $index){
         <div class="item" [class.open]="open() === $index">
           <h3>
             <button type="button" [attr.aria-expanded]="open() === $index" (click)="toggle($index)">
