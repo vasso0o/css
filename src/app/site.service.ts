@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { cmsContent } from './cms-content';
-import { Branding, Palette, Theme } from './models';
+import { Branding, Footer, Palette, Theme } from './models';
+
+const DEFAULT_FOOTER: Footer = {
+  layout: 'columns', description: '', phone: '', address: '', social: [], copyright: '',
+  showLogo: true, showEmail: true, backToTop: true,
+};
 
 const DEFAULT_THEME: Theme = {
   defaultMode: 'auto',
@@ -37,6 +42,13 @@ function palette(prefix: 'l' | 'd', p: Palette): Record<string, string> {
   };
 }
 
+const FONT_NAME = /^[A-Za-z][A-Za-z0-9 ]{0,39}$/;
+
+/** Returns a CSS font stack for a font name from the CMS; "system" or anything unexpected falls back to the system stack. */
+function fontStack(name: string | undefined, fallback: string): string {
+  return name && name !== 'system' && FONT_NAME.test(name) ? `'${name}', ${fallback}` : fallback;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SiteService {
   private readonly site = cmsContent().site;
@@ -44,13 +56,29 @@ export class SiteService {
   readonly navigation = this.site.menus?.navigation ?? [];
   readonly footer = this.site.menus?.footer ?? [];
   readonly theme = this.site.theme ?? DEFAULT_THEME;
+  readonly footerOptions: Footer = { ...DEFAULT_FOOTER, ...(this.site.footer ?? {}) };
   readonly mode = this.theme.defaultMode;
 
-  /** Both palettes, radius and padding as CSS custom properties; styles.css picks the active palette. */
+  readonly baseSize = Math.min(24, Math.max(12, Number(this.theme.baseSize) || 16));
+
+  /** Google Fonts stylesheet for the chosen heading and body fonts, or '' when both use the system font. */
+  readonly fontsUrl: string = (() => {
+    const names = [...new Set([this.theme.headingFont, this.theme.bodyFont])].filter(
+      (n): n is string => !!n && n !== 'system' && FONT_NAME.test(n),
+    );
+    if (!names.length) return '';
+    const families = names.map((n) => `family=${n.replace(/ /g, '+')}:wght@400;500;600;700;800;900`);
+    return `https://fonts.googleapis.com/css2?${families.join('&')}&display=swap`;
+  })();
+
+  /** Palettes, radius, padding and typography as CSS custom properties; styles.css picks the active palette. */
   readonly cssVars: Record<string, string> = {
     ...palette('l', this.theme.light),
     ...palette('d', this.theme.dark),
     '--site-radius': `${this.theme.cornerRadius}px`,
     '--site-pad': `${this.theme.padding}px`,
+    '--font-body': fontStack(this.theme.bodyFont, "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"),
+    '--font-heading': fontStack(this.theme.headingFont, "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"),
+    '--heading-weight': `${Math.min(900, Math.max(300, Number(this.theme.headingWeight) || 700))}`,
   };
 }

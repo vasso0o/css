@@ -90,6 +90,21 @@ export function isExternal(url?: string): boolean {
 
 export type BlockItem = Record<string, string>;
 
+const SCHEMA_COLORS: Record<string, string> = {
+  '--primary': 'var(--c-accent)',
+  '--secondary': 'var(--c-secondary)',
+  '--background': 'var(--c-bg)',
+  '--surface': 'var(--c-surface)',
+  '--text': 'var(--c-fg)',
+};
+
+/** Maps a color-schema token (e.g. "--primary") or hex color from the CMS to a CSS color; undefined when empty or invalid. */
+export function schemaColor(v?: string): string | undefined {
+  const value = v?.trim();
+  if (!value) return undefined;
+  return SCHEMA_COLORS[value] ?? (/^#[0-9a-f]{3,8}$/i.test(value) ? value : undefined);
+}
+
 /** Repeatable entries (slides, tiles, images, questions) arrive as a JSON array inside `items`. */
 export function parseItems(raw?: string): BlockItem[] {
   if (!raw) return [];

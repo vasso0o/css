@@ -65,12 +65,34 @@ export interface Theme {
   dark: Palette;
   cornerRadius: number;
   padding: number;
+  headingFont?: string;
+  bodyFont?: string;
+  baseSize?: number;
+  headingWeight?: number;
+}
+
+export interface SocialLink {
+  platform: string;
+  url: string;
+}
+
+export interface Footer {
+  layout: 'columns' | 'centered';
+  description: string;
+  phone: string;
+  address: string;
+  social: SocialLink[];
+  copyright: string;
+  showLogo: boolean;
+  showEmail: boolean;
+  backToTop: boolean;
 }
 
 export interface Site {
   branding: Branding | null;
   menus: { navigation: MenuItem[]; footer: MenuItem[] };
   theme: Theme | null;
+  footer?: Footer | null;
 }
 
 export interface CmsContent {

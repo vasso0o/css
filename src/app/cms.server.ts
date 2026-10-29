@@ -53,6 +53,7 @@ async function fetchContent(): Promise<CmsContent> {
       branding: bundle.branding ?? null,
       menus: bundle.menus ?? { navigation: [], footer: [] },
       theme: bundle.theme ?? null,
+      footer: bundle.footer ?? null,
     },
   }).replace(MEDIA, (_, id) => `${root}/media/${id}`);
 

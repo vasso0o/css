@@ -15,6 +15,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading, inherit);
+  font-weight: var(--heading-weight, 700);
+}
+
 /* Theme palettes come from the CMS as --l-* (light) and --d-* (dark) variables set on app-root. */
 app-root {
   --c-accent: var(--l-primary);
@@ -30,6 +35,7 @@ app-root {
   min-height: 100vh;
   background: var(--c-bg);
   color: var(--c-fg);
+  font-family: var(--font-body, inherit);
 }
 
 app-root[data-mode='dark'] {
