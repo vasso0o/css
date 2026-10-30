@@ -14,6 +14,7 @@ import { SpacerBlock } from './blocks/spacer';
 import { DividerBlock } from './blocks/divider';
 import { ButtonGroupBlock } from './blocks/button-group';
 import { ListBlock } from './blocks/list';
+import { CardStackBlock } from './blocks/card-stack';
 
 // Add a styled component here to support a new block type from the CMS schema.
 export const BLOCK_REGISTRY: Record<BlockType, Type<unknown>> = {
@@ -31,4 +32,5 @@ export const BLOCK_REGISTRY: Record<BlockType, Type<unknown>> = {
   divider: DividerBlock,
   buttonGroup: ButtonGroupBlock,
   list: ListBlock,
+  cardStack: CardStackBlock,
 };

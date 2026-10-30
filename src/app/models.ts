@@ -12,7 +12,8 @@ export type BlockType =
   | 'spacer'
   | 'divider'
   | 'buttonGroup'
-  | 'list';
+  | 'list'
+  | 'cardStack';
 
 export interface Block {
   id: string;
