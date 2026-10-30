@@ -1,6 +1,5 @@
 import { Type } from '@angular/core';
 import { BlockType } from './models';
-import { HeroBlock } from './blocks/hero';
 import { HeadingBlock } from './blocks/heading';
 import { ImageBlock } from './blocks/image';
 import { ButtonBlock } from './blocks/button';
@@ -18,7 +17,6 @@ import { ListBlock } from './blocks/list';
 
 // Add a styled component here to support a new block type from the CMS schema.
 export const BLOCK_REGISTRY: Record<BlockType, Type<unknown>> = {
-  hero: HeroBlock,
   heading: HeadingBlock,
   image: ImageBlock,
   button: ButtonBlock,

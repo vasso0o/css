@@ -1,5 +1,4 @@
 export type BlockType =
-  | 'hero'
   | 'heading'
   | 'image'
   | 'button'
@@ -44,6 +43,7 @@ export interface Branding {
   metaKeywords: string;
   ogImageUrl: string;
   domain: string;
+  logoSize?: number;
 }
 
 export interface MenuItem {

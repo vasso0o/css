@@ -37,9 +37,8 @@ const ICONS: Record<string, string> = {
       <div class="bar">
         <a class="brand" routerLink="/">
           @if (b.logoUrl) {
-            <img class="logo" [src]="b.logoUrl" [alt]="b.siteName" />
-          }
-          @if (b.siteName) {
+            <img class="logo" [src]="b.logoUrl" [alt]="b.siteName" [style.height.px]="logoSize" />
+          } @else if (b.siteName) {
             <span class="name">
               {{ b.siteName }}
               @if (b.tagline) {
@@ -68,11 +67,11 @@ const ICONS: Record<string, string> = {
       <div class="foot">
         <div class="about">
           @if (b.logoUrl && f.showLogo) {
-            <img class="logo" [src]="b.logoUrl" [alt]="b.siteName" />
+            <img class="logo" [src]="b.logoUrl" [alt]="b.siteName"             [style.height.px]="logoSize" />
           }
-          @if (b.siteName) {
-            <strong class="fname">{{ b.siteName }}</strong>
-          }
+                      @if (b.siteName) {
+                        <strong class="fname">{{ b.siteName }}</strong>
+                      }
           @if (f.description || b.tagline) {
             <p class="blurb">{{ f.description || b.tagline }}</p>
           }
@@ -142,7 +141,7 @@ const ICONS: Record<string, string> = {
     header { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--c-bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--c-line); }
     .bar { max-width: 1120px; margin: 0 auto; padding: calc(var(--site-pad) * .6) var(--site-pad); display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: .75rem; text-decoration: none; color: var(--c-fg); }
-    .logo { height: 40px; width: auto; max-width: 160px; object-fit: contain; border-radius: calc(var(--site-radius) / 2); }
+    .logo { width: auto; max-width: min(60vw, 600px); object-fit: contain; border-radius: calc(var(--site-radius) / 2); }
     .name { font-weight: 700; font-size: 1.1rem; line-height: 1.2; display: flex; flex-direction: column; }
     .name small { font-weight: 400; font-size: .75rem; color: var(--c-muted); }
     nav { display: flex; gap: .25rem; flex-wrap: wrap; }
@@ -214,6 +213,7 @@ export class App {
   private readonly pages = inject(PagesService);
   private readonly doc = inject(DOCUMENT);
   protected readonly b = this.site.branding;
+  protected readonly logoSize = Math.min(300, Math.max(16, Number(this.b.logoSize) || 40));
   protected readonly f = this.site.footerOptions;
   protected readonly nav: MenuItem[] = this.buildNav();
   protected readonly year = new Date().getFullYear();
